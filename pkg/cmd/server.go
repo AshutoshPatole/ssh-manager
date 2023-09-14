@@ -36,12 +36,13 @@ to quickly create a Cobra application.`,
 
 func init() {
 	addCmd.AddCommand(serverCmd)
-	serverCmd.Flags().StringVarP(&aGroup, "group", "g", "default", "Group name in which this server should be added")
+	serverCmd.Flags().StringVarP(&aGroup, "group", "g", "", "Group name in which this server should be added")
 	serverCmd.Flags().StringVarP(&aUser, "user", "u", "", "User name to connect")
-	serverCmd.MarkFlagRequired("user")
+	serverCmd.MarkFlagsRequiredTogether("user", "group")
+
 }
 
 func addServer(server, user string) {
 	password := ssh.AskPass()
-	ssh.ConnectServer(server, user, password)
+	ssh.ConnectServer(server, user, password, aGroup)
 }

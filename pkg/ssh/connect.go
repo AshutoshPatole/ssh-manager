@@ -5,13 +5,14 @@ import (
 	"os"
 	"time"
 
+	cConfig "github.com/AshutoshPatole/ssh-manager/pkg/config"
 	"github.com/TwiN/go-color"
 	"golang.org/x/crypto/ssh"
 )
 
 const PORT = "22"
 
-func ConnectServer(server, user, password string) {
+func ConnectServer(server, user, password, group string) {
 
 	config := &ssh.ClientConfig{
 		User: user,
@@ -50,5 +51,8 @@ func ConnectServer(server, user, password string) {
 	session.Stdout = os.Stdout
 	session.Stderr = os.Stderr
 
-	AddPubKeysToServer(session)
+	success := AddPubKeysToServer(session)
+
+	cConfig.SaveServer(server, user, group, success)
+
 }

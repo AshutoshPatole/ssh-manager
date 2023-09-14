@@ -8,7 +8,7 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-func AddPubKeysToServer(session *ssh.Session) {
+func AddPubKeysToServer(session *ssh.Session) bool {
 	home, _ := os.UserHomeDir()
 
 	pubKeyPath := home + "/.ssh/id_ed25519.pub"
@@ -17,15 +17,18 @@ func AddPubKeysToServer(session *ssh.Session) {
 
 	if err != nil {
 		fmt.Println(color.InRed("Could not read public key " + pubKeyPath))
+		return false
 	}
 
 	command := fmt.Sprintf("echo '%s' >> ~/.ssh/authorized_keys", pubKey)
 	if err := session.Run(command); err != nil {
 		fmt.Println(color.InRed("Failed to add public key " + err.Error()))
+		return false
 	} else {
 		fmt.Println("Added public key to server")
 	}
 
 	defer session.Close()
+	return true
 
 }
