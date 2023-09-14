@@ -1,7 +1,6 @@
 package ssh
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -27,6 +26,8 @@ func ConnectServer(server, user, password string) {
 			ssh.KeyAlgoECDSA521,
 			ssh.KeyAlgoED25519,
 		},
+
+		// TODO: fix insecureignore host callback method
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 		// optional tcp connect timeout
 		Timeout: 5 * time.Second,
@@ -49,9 +50,5 @@ func ConnectServer(server, user, password string) {
 	session.Stdout = os.Stdout
 	session.Stderr = os.Stderr
 
-	if err := session.Run("free -h"); err != nil {
-		fmt.Println(color.InRed("Something is wrong with the connection"))
-		os.Exit(1)
-	}
-
+	AddPubKeysToServer(session)
 }

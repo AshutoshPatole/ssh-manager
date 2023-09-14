@@ -16,6 +16,7 @@ func AskPass() string {
 		fmt.Print(color.InRedOverBlack(err))
 		os.Exit(1)
 	}
+	fmt.Println("")
 	password := string(bytepwd)
 	return password
 }
