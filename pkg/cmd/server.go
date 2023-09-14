@@ -30,7 +30,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		addServer()
+		addServer(args[0], aUser)
 	},
 }
 
@@ -38,9 +38,10 @@ func init() {
 	addCmd.AddCommand(serverCmd)
 	serverCmd.Flags().StringVarP(&aGroup, "group", "g", "default", "Group name in which this server should be added")
 	serverCmd.Flags().StringVarP(&aUser, "user", "u", "", "User name to connect")
+	serverCmd.MarkFlagRequired("user")
 }
 
-func addServer() {
+func addServer(server, user string) {
 	password := ssh.AskPass()
-	fmt.Println(password)
+	ssh.ConnectServer(server, user, password)
 }
