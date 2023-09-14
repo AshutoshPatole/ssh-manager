@@ -1,12 +1,12 @@
 /*
 Copyright © 2023 AshutoshPatole
 */
-package cmd
+package add
 
 import (
 	"fmt"
 
-	"github.com/AshutoshPatole/ssh-manager/pkg/ssh"
+	"github.com/AshutoshPatole/ssh-manager/ssh"
 	"github.com/TwiN/go-color"
 	"github.com/spf13/cobra"
 )
@@ -35,7 +35,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	addCmd.AddCommand(serverCmd)
+	AddCmd.AddCommand(serverCmd)
 	serverCmd.Flags().StringVarP(&aGroup, "group", "g", "", "Group name in which this server should be added")
 	serverCmd.Flags().StringVarP(&aUser, "user", "u", "", "User name to connect")
 	serverCmd.MarkFlagsRequiredTogether("user", "group")

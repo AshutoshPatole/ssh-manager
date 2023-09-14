@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	cConfig "github.com/AshutoshPatole/ssh-manager/pkg/config"
+	cConfig "github.com/AshutoshPatole/ssh-manager/config"
 	"github.com/TwiN/go-color"
 	"golang.org/x/crypto/ssh"
 )

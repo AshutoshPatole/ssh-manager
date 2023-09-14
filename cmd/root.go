@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/AshutoshPatole/ssh-manager/pkg/add"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -39,7 +40,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
+	rootCmd.AddCommand(add.AddCmd)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ssh-manager.json)")
 
 }
