@@ -17,9 +17,9 @@ func SaveServer(hostname, user, group string, keyAuth bool) {
 	}
 
 	existingGroup := -1
-	for _, grp := range config.Groups {
+	for idx, grp := range config.Groups {
 		if group == grp.Name {
-			existingGroup = 1
+			existingGroup = idx
 		}
 	}
 	ip, err := IP(hostname)
@@ -42,8 +42,13 @@ func SaveServer(hostname, user, group string, keyAuth bool) {
 		}
 		config.Groups = append(config.Groups, newGroup)
 	} else {
+		isDup := checkDuplicateServer(hostname, config.Groups[existingGroup].Servers)
 		// save info
-		config.Groups[existingGroup].Servers = append(config.Groups[existingGroup].Servers, server)
+		if !isDup {
+			config.Groups[existingGroup].Servers = append(config.Groups[existingGroup].Servers, server)
+		} else {
+			fmt.Println(color.InYellow("Server already exists in group"))
+		}
 	}
 
 	// save the information in config file
@@ -57,22 +62,30 @@ func SaveServer(hostname, user, group string, keyAuth bool) {
 func IP(host string) (string, error) {
 	addr := net.ParseIP(host)
 	if addr == nil {
-		// fmt.Println("Given String is a Domain Name")
+		// if addr is nil then its a domain
 		ips, err := net.LookupIP(host)
 		if err != nil {
 			fmt.Println("Error:", err)
 		}
-
-		// Print the IP addresses
-		for _, ip := range ips {
-			fmt.Println(ip)
+		if len(ips) != 0 {
+			return ips[0].String(), nil
+		} else {
+			return "", nil
 		}
 
-		return ips[0].String(), nil
-
 	} else {
-		// fmt.Println("Given String is a Ip Address")
+		// since it is not a domain it has to be a ip
 		return host, nil
 	}
+}
 
+func checkDuplicateServer(host string, servers []Server) bool {
+	isDuplicate := false
+	ip, _ := IP(host)
+	for _, server := range servers {
+		if server.HostName == host && ip == server.IP {
+			isDuplicate = true
+		}
+	}
+	return isDuplicate
 }
