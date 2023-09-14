@@ -1,1 +1,2 @@
-# ssh-manager
+# simple-ssh-manager
+
