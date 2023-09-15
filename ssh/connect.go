@@ -1,7 +1,7 @@
 package ssh
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"time"
 
@@ -35,14 +35,16 @@ func ConnectServer(server, user, password, group, env string) {
 	}
 	client, err := ssh.Dial("tcp", server+":"+PORT, config)
 	if err != nil {
-		log.Fatalln(color.InRed(err.Error()))
+		fmt.Println(color.InRed(err.Error()))
+		return
 	}
 	defer client.Close()
 
 	// start session
 	session, err := client.NewSession()
 	if err != nil {
-		log.Fatalln(color.InRed(err))
+		fmt.Println(color.InRed(err.Error()))
+		return
 	}
 	defer session.Close()
 
