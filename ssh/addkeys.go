@@ -20,7 +20,7 @@ func AddPubKeysToServer(session *ssh.Session) bool {
 		return false
 	}
 
-	command := fmt.Sprintf("echo '%s' >> ~/.ssh/authorized_keys", pubKey)
+	command := fmt.Sprintf("mkdir -p ~/.ssh/ ;echo '%s' >> ~/.ssh/authorized_keys", pubKey)
 	if err := session.Run(command); err != nil {
 		fmt.Println(color.InRed("Failed to add public key " + err.Error()))
 		return false

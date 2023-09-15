@@ -10,7 +10,7 @@ import (
 // AddCmd represents the add command
 var AddCmd = &cobra.Command{
 	Use:   "add",
-	Short: "A brief description of your command",
+	Short: "add servers and groups in configurations",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
