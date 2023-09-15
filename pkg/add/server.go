@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var aUser, aGroup string
+var aUser, aGroup, aEnv string
 
 // serverCmd represents the server command
 var serverCmd = &cobra.Command{
@@ -38,11 +38,12 @@ func init() {
 	AddCmd.AddCommand(serverCmd)
 	serverCmd.Flags().StringVarP(&aGroup, "group", "g", "", "Group name in which this server should be added")
 	serverCmd.Flags().StringVarP(&aUser, "user", "u", "", "User name to connect")
+	serverCmd.Flags().StringVarP(&aEnv, "env", "e", "dev", "Environment to add ")
 	serverCmd.MarkFlagsRequiredTogether("user", "group")
 
 }
 
 func addServer(server, user string) {
 	password := ssh.AskPass()
-	ssh.ConnectServer(server, user, password, aGroup)
+	ssh.ConnectServer(server, user, password, aGroup, aEnv)
 }

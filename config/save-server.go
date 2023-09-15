@@ -12,8 +12,9 @@ import (
 
 var config c.Config
 var existingGroup = -1
+var existingEnv = -1
 
-func SaveServer(hostname, user, group string, keyAuth bool) {
+func SaveServer(hostname, user, group, env string, keyAuth bool) {
 
 	if err := viper.Unmarshal(&config); err != nil {
 		log.Fatalln(err)
@@ -22,6 +23,11 @@ func SaveServer(hostname, user, group string, keyAuth bool) {
 	for idx, grp := range config.Groups {
 		if group == grp.Name {
 			existingGroup = idx
+			for idj, envs := range grp.Environment {
+				if envs.Name == env {
+					existingEnv = idj
+				}
+			}
 		}
 	}
 	ip, err := IP(hostname)
@@ -34,20 +40,23 @@ func SaveServer(hostname, user, group string, keyAuth bool) {
 		IP:       ip,
 		KeyAuth:  keyAuth,
 	}
-
+	environment := c.Env{
+		Name:    env,
+		Servers: []c.Server{server},
+	}
 	if existingGroup == -1 {
 		// create a group and save info
 		newGroup := c.Group{
-			Name:    group,
-			User:    user,
-			Servers: []c.Server{server},
+			Name:        group,
+			User:        user,
+			Environment: []c.Env{environment},
 		}
 		config.Groups = append(config.Groups, newGroup)
 	} else {
-		isDup := checkDuplicateServer(server, config.Groups[existingGroup].Servers)
+		isDup := checkDuplicateServer(server, config.Groups[existingGroup].Environment[existingEnv].Servers)
 		// save info
 		if !isDup {
-			config.Groups[existingGroup].Servers = append(config.Groups[existingGroup].Servers, server)
+			config.Groups[existingGroup].Environment[existingEnv].Servers = append(config.Groups[existingGroup].Environment[existingEnv].Servers, server)
 		} else {
 			fmt.Println(color.InYellow("Server already exists in group"))
 		}
@@ -86,7 +95,7 @@ func checkDuplicateServer(s c.Server, servers []c.Server) bool {
 		if server.HostName == s.HostName && server.IP == s.IP {
 			isDuplicate = true
 			if s.KeyAuth {
-				config.Groups[existingGroup].Servers[idx].KeyAuth = true
+				config.Groups[existingGroup].Environment[existingEnv].Servers[idx].KeyAuth = true
 			}
 		}
 	}

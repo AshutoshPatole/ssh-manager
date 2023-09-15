@@ -12,7 +12,7 @@ import (
 
 const PORT = "22"
 
-func ConnectServer(server, user, password, group string) {
+func ConnectServer(server, user, password, group, env string) {
 
 	config := &ssh.ClientConfig{
 		User: user,
@@ -53,6 +53,6 @@ func ConnectServer(server, user, password, group string) {
 
 	success := AddPubKeysToServer(session)
 
-	cConfig.SaveServer(server, user, group, success)
+	cConfig.SaveServer(server, user, group, env, success)
 
 }

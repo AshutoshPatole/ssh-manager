@@ -4,14 +4,7 @@ Copyright © 2023 AshutoshPatole
 package list
 
 import (
-	"fmt"
-	"log"
-	"os"
-
-	c "github.com/AshutoshPatole/ssh-manager/utils"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // listCmd represents the list command
@@ -42,57 +35,57 @@ func init() {
 	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-func ListGroups() {
-	var config c.Config
+// func ListGroups() {
+// 	var config c.Config
 
-	if err := viper.Unmarshal(&config); err != nil {
-		log.Fatalln(err)
-	}
+// 	if err := viper.Unmarshal(&config); err != nil {
+// 		log.Fatalln(err)
+// 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"ID.", "Group Name", "Server(s)"})
-	servers := 0
-	for idx, group := range config.Groups {
-		servers = len(group.Servers)
-		table.Append([]string{fmt.Sprint(idx), group.Name, fmt.Sprint(servers)})
-	}
-	table.Render()
-}
+// 	table := tablewriter.NewWriter(os.Stdout)
+// 	table.SetHeader([]string{"ID.", "Group Name", "Server(s)"})
+// 	servers := 0
+// 	for idx, group := range config.Groups {
+// 		servers = len(group.Servers)
+// 		table.Append([]string{fmt.Sprint(idx), group.Name, fmt.Sprint(servers)})
+// 	}
+// 	table.Render()
+// }
 
-func ListServers(group string) {
-	var config c.Config
+// func ListServers(group string) {
+// 	var config c.Config
 
-	if err := viper.Unmarshal(&config); err != nil {
-		log.Fatalln(err)
-	}
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"ID", "Server", "IP", "Key status"})
+// 	if err := viper.Unmarshal(&config); err != nil {
+// 		log.Fatalln(err)
+// 	}
+// 	table := tablewriter.NewWriter(os.Stdout)
+// 	table.SetHeader([]string{"ID", "Server", "IP", "Key status"})
 
-	// ANSI escape code for colors
-	const (
-		green = "\033[32m"
-		red   = "\033[31m"
-		reset = "\033[0m"
-	)
+// 	// ANSI escape code for colors
+// 	const (
+// 		green = "\033[32m"
+// 		red   = "\033[31m"
+// 		reset = "\033[0m"
+// 	)
 
-	// Checkmark and cross characters
-	const (
-		checkmark = "✓"
-		cross     = "✗"
-	)
+// 	// Checkmark and cross characters
+// 	const (
+// 		checkmark = "✓"
+// 		cross     = "✗"
+// 	)
 
-	for _, grp := range config.Groups {
-		if grp.Name == group {
-			for idx, server := range grp.Servers {
-				status := ""
-				if server.KeyAuth {
-					status = green + checkmark + reset
-				} else {
-					status = red + cross + reset
-				}
-				table.Append([]string{fmt.Sprint(idx + 1), server.HostName, server.IP, status})
-			}
-		}
-	}
-	table.Render()
-}
+// 	for _, grp := range config.Groups {
+// 		if grp.Name == group {
+// 			for idx, server := range grp.Servers {
+// 				status := ""
+// 				if server.KeyAuth {
+// 					status = green + checkmark + reset
+// 				} else {
+// 					status = red + cross + reset
+// 				}
+// 				table.Append([]string{fmt.Sprint(idx + 1), server.HostName, server.IP, status})
+// 			}
+// 		}
+// 	}
+// 	table.Render()
+// }

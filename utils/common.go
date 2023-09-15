@@ -6,10 +6,15 @@ type Server struct {
 	KeyAuth  bool   `mapstructure:"keyAuth"`
 }
 
-type Group struct {
+type Env struct {
 	Name    string   `mapstructure:"name"`
-	User    string   `mapstructure:"user"`
 	Servers []Server `mapstructure:"servers"`
+}
+
+type Group struct {
+	Name        string `mapstructure:"name"`
+	User        string `mapstructure:"user"`
+	Environment []Env  `mapstructure:"env"`
 }
 
 type Config struct {
