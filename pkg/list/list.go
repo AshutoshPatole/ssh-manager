@@ -63,40 +63,45 @@ func ListGroups() {
 	table.Render()
 }
 
-// func ListServers(group string) {
-// 	var config c.Config
+func ListServers(group string) {
+	var config c.Config
 
-// 	if err := viper.Unmarshal(&config); err != nil {
-// 		log.Fatalln(err)
-// 	}
-// 	table := tablewriter.NewWriter(os.Stdout)
-// 	table.SetHeader([]string{"ID", "Server", "IP", "Key status"})
+	if err := viper.Unmarshal(&config); err != nil {
+		log.Fatalln(err)
+	}
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Environment", "Server", "IP", "Key status"})
+	table.SetRowLine(true)
+	table.SetAlignment(tablewriter.ALIGN_CENTER)
+	table.SetAutoMergeCellsByColumnIndex([]int{0})
+	// ANSI escape code for colors
+	const (
+		green = "\033[32m"
+		red   = "\033[31m"
+		reset = "\033[0m"
+	)
 
-// 	// ANSI escape code for colors
-// 	const (
-// 		green = "\033[32m"
-// 		red   = "\033[31m"
-// 		reset = "\033[0m"
-// 	)
+	// Checkmark and cross characters
+	const (
+		checkmark = "✓"
+		cross     = "✗"
+	)
 
-// 	// Checkmark and cross characters
-// 	const (
-// 		checkmark = "✓"
-// 		cross     = "✗"
-// 	)
+	for _, grp := range config.Groups {
+		if grp.Name == group {
+			for _, env := range grp.Environment {
+				for _, server := range env.Servers {
+					status := ""
+					if server.KeyAuth {
+						status = green + checkmark + reset
+					} else {
+						status = red + cross + reset
+					}
+					table.Append([]string{env.Name, server.HostName, server.IP, status})
+				}
 
-// 	for _, grp := range config.Groups {
-// 		if grp.Name == group {
-// 			for idx, server := range grp.Servers {
-// 				status := ""
-// 				if server.KeyAuth {
-// 					status = green + checkmark + reset
-// 				} else {
-// 					status = red + cross + reset
-// 				}
-// 				table.Append([]string{fmt.Sprint(idx + 1), server.HostName, server.IP, status})
-// 			}
-// 		}
-// 	}
-// 	table.Render()
-// }
+			}
+		}
+	}
+	table.Render()
+}
