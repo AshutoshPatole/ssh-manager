@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var lGroup string
+
 // serverCmd represents the server command
 var serverCmd = &cobra.Command{
 	Use:   "server",
@@ -32,7 +34,7 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
-
+	serverCmd.Flags().StringVarP(&lGroup, "group", "g", "", "Specify which group servers should be displayed")
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

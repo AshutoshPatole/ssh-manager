@@ -1,4 +1,4 @@
-package config
+package utils
 
 type Server struct {
 	HostName string `mapstructure:"hostname"`

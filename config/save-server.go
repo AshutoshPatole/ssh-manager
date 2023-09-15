@@ -5,11 +5,12 @@ import (
 	"log"
 	"net"
 
+	c "github.com/AshutoshPatole/ssh-manager/utils"
 	"github.com/TwiN/go-color"
 	"github.com/spf13/viper"
 )
 
-var config Config
+var config c.Config
 var existingGroup = -1
 
 func SaveServer(hostname, user, group string, keyAuth bool) {
@@ -28,7 +29,7 @@ func SaveServer(hostname, user, group string, keyAuth bool) {
 		fmt.Println(color.InYellow("Could not resolve IP address"))
 	}
 
-	server := Server{
+	server := c.Server{
 		HostName: hostname,
 		IP:       ip,
 		KeyAuth:  keyAuth,
@@ -36,10 +37,10 @@ func SaveServer(hostname, user, group string, keyAuth bool) {
 
 	if existingGroup == -1 {
 		// create a group and save info
-		newGroup := Group{
+		newGroup := c.Group{
 			Name:    group,
 			User:    user,
-			Servers: []Server{server},
+			Servers: []c.Server{server},
 		}
 		config.Groups = append(config.Groups, newGroup)
 	} else {
@@ -79,7 +80,7 @@ func IP(host string) (string, error) {
 	}
 }
 
-func checkDuplicateServer(s Server, servers []Server) bool {
+func checkDuplicateServer(s c.Server, servers []c.Server) bool {
 	isDuplicate := false
 	for idx, server := range servers {
 		if server.HostName == s.HostName && server.IP == s.IP {
