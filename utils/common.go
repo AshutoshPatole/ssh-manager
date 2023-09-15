@@ -14,7 +14,7 @@ type Env struct {
 type Group struct {
 	Name        string `mapstructure:"name"`
 	User        string `mapstructure:"user"`
-	Environment []Env  `mapstructure:"env"`
+	Environment []Env  `mapstructure:"environment"`
 }
 
 type Config struct {
