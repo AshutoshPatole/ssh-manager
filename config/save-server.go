@@ -9,14 +9,15 @@ import (
 	"github.com/spf13/viper"
 )
 
+var config Config
+var existingGroup = -1
+
 func SaveServer(hostname, user, group string, keyAuth bool) {
-	var config Config
 
 	if err := viper.Unmarshal(&config); err != nil {
 		log.Fatalln(err)
 	}
 
-	existingGroup := -1
 	for idx, grp := range config.Groups {
 		if group == grp.Name {
 			existingGroup = idx
@@ -42,7 +43,7 @@ func SaveServer(hostname, user, group string, keyAuth bool) {
 		}
 		config.Groups = append(config.Groups, newGroup)
 	} else {
-		isDup := checkDuplicateServer(hostname, config.Groups[existingGroup].Servers)
+		isDup := checkDuplicateServer(server, config.Groups[existingGroup].Servers)
 		// save info
 		if !isDup {
 			config.Groups[existingGroup].Servers = append(config.Groups[existingGroup].Servers, server)
@@ -56,7 +57,6 @@ func SaveServer(hostname, user, group string, keyAuth bool) {
 	if err := viper.WriteConfig(); err != nil {
 		log.Fatalln(err)
 	}
-
 }
 
 func IP(host string) (string, error) {
@@ -79,12 +79,14 @@ func IP(host string) (string, error) {
 	}
 }
 
-func checkDuplicateServer(host string, servers []Server) bool {
+func checkDuplicateServer(s Server, servers []Server) bool {
 	isDuplicate := false
-	ip, _ := IP(host)
-	for _, server := range servers {
-		if server.HostName == host && ip == server.IP {
+	for idx, server := range servers {
+		if server.HostName == s.HostName && server.IP == s.IP {
 			isDuplicate = true
+			if s.KeyAuth {
+				config.Groups[existingGroup].Servers[idx].KeyAuth = true
+			}
 		}
 	}
 	return isDuplicate
