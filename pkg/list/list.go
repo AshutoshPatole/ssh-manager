@@ -4,7 +4,14 @@ Copyright © 2023 AshutoshPatole
 package list
 
 import (
+	"fmt"
+	"log"
+	"os"
+
+	c "github.com/AshutoshPatole/ssh-manager/utils"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // listCmd represents the list command
@@ -35,22 +42,26 @@ func init() {
 	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-// func ListGroups() {
-// 	var config c.Config
+func ListGroups() {
+	var config c.Config
 
-// 	if err := viper.Unmarshal(&config); err != nil {
-// 		log.Fatalln(err)
-// 	}
+	if err := viper.Unmarshal(&config); err != nil {
+		log.Fatalln(err)
+	}
 
-// 	table := tablewriter.NewWriter(os.Stdout)
-// 	table.SetHeader([]string{"ID.", "Group Name", "Server(s)"})
-// 	servers := 0
-// 	for idx, group := range config.Groups {
-// 		servers = len(group.Servers)
-// 		table.Append([]string{fmt.Sprint(idx), group.Name, fmt.Sprint(servers)})
-// 	}
-// 	table.Render()
-// }
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"ID.", "Group Name", "Environments", "Server(s)"})
+	env := 0
+	servers := 0
+	for idx, group := range config.Groups {
+		env = len(group.Environment)
+		for _, envs := range group.Environment {
+			servers += len(envs.Servers)
+		}
+		table.Append([]string{fmt.Sprint(idx), group.Name, fmt.Sprint(env), fmt.Sprint(servers)})
+	}
+	table.Render()
+}
 
 // func ListServers(group string) {
 // 	var config c.Config
