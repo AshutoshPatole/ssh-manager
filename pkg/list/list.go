@@ -45,15 +45,15 @@ func ListGroups() {
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"ID.", "Group Name", "Environments", "Server(s)"})
+	table.SetHeader([]string{"ID.", "Group Name", "Environments", "Env Name", "Server(s)"})
+	table.SetAutoMergeCellsByColumnIndex([]int{0, 1, 2})
+	table.SetRowLine(true)
 	env := 0
-	servers := 0
 	for idx, group := range config.Groups {
 		env = len(group.Environment)
 		for _, envs := range group.Environment {
-			servers += len(envs.Servers)
+			table.Append([]string{fmt.Sprint(idx + 1), group.Name, fmt.Sprint(env), envs.Name, fmt.Sprint(len(envs.Servers))})
 		}
-		table.Append([]string{fmt.Sprint(idx), group.Name, fmt.Sprint(env), fmt.Sprint(servers)})
 	}
 	table.Render()
 }
