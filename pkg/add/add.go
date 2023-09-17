@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var allowedEnvironments = []string{"dev", "uat", "sit", "ppd", "prd"}
+
 // AddCmd represents the add command
 var AddCmd = &cobra.Command{
 	Use:   "add",

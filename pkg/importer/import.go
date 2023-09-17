@@ -49,6 +49,7 @@ func init() {
 	// and all subcommands, e.g.:
 	// importCmd.PersistentFlags().String("foo", "", "A help for foo")
 	ImportCmd.Flags().StringVarP(&filePath, "file", "f", "", "Specify YAML file path to import")
+	ImportCmd.MarkFlagRequired("file")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:

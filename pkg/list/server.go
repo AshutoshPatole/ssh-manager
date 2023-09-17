@@ -33,6 +33,7 @@ func init() {
 	// and all subcommands, e.g.:
 	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
 	serverCmd.Flags().StringVarP(&lGroup, "group", "g", "", "Specify which group servers should be displayed")
+	serverCmd.MarkFlagRequired("group")
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
