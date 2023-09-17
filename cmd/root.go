@@ -20,13 +20,13 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "ssm",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "CLI for managing SSH connections efficiently",
+	Long: `A CLI utility for managing SSH servers and keys efficiently:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+This utility is designed to streamline SSH key handling by categorizing servers into groups. 
+To get started, users can run the 'ssm import template' command to obtain a predefined template for server configuration
+
+	`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

@@ -33,7 +33,16 @@ type Server struct {
 var ImportCmd = &cobra.Command{
 	Use:   "import",
 	Short: "Import file",
-	Long:  ``,
+	Long: `
+You can import your groups and server configurations using YAML file (or)
+You can add servers individually using ssm add server command. 
+
+To import config in bulk:
+ssm import -f $HOME/import.yaml
+
+To download a template YAML file. This will save the template in ~/Downloads folder
+ssm import template 
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if filePath != "" {
 			readFile(filePath)
@@ -48,7 +57,7 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// importCmd.PersistentFlags().String("foo", "", "A help for foo")
-	ImportCmd.Flags().StringVarP(&filePath, "file", "f", "", "Specify YAML file path to import")
+	ImportCmd.Flags().StringVarP(&filePath, "file", "f", "", "Specify YAML file path to import (required)")
 	ImportCmd.MarkFlagRequired("file")
 
 	// Cobra supports local flags which will only run when this command
