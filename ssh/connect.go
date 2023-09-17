@@ -9,6 +9,7 @@ import (
 )
 
 func Connect(server, user, environment string) {
+	fmt.Println("Environment : ", environment)
 	home, _ := os.UserHomeDir()
 
 	privKey := home + "/.ssh/id_ed25519"

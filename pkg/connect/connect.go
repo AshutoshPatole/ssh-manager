@@ -6,6 +6,7 @@ package connect
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/AshutoshPatole/ssh-manager/ssh"
@@ -46,6 +47,12 @@ func init() {
 	// connectCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
+type ServerOption struct {
+	Label       string
+	Environment string
+	HostName    string
+}
+
 func ListToConnectServers(group string) {
 	var config c.Config
 
@@ -53,28 +60,49 @@ func ListToConnectServers(group string) {
 		log.Fatalln(err)
 	}
 
-	var servers []string
-	var user string
-	var environment string
+	selectedEnvName := ""
+	selectedHostName := ""
+
+	serverOptions := []ServerOption{}
+	user := ""
 
 	for _, grp := range config.Groups {
 		if grp.Name == group {
 			user = grp.User
 			for _, env := range grp.Environment {
-				environment = env.Name
 				for _, server := range env.Servers {
-					servers = append(servers, server.HostName)
+					serverOption := ServerOption{
+						Label:       fmt.Sprintf("%s (%s)", server.HostName, env.Name),
+						Environment: env.Name,
+						HostName:    server.HostName,
+					}
+					serverOptions = append(serverOptions, serverOption)
 				}
 			}
 		}
 	}
-	toConnect := ""
+	labels := make([]string, len(serverOptions))
+	for i, serverOption := range serverOptions {
+		labels[i] = serverOption.Label
+	}
+
+	fmt.Println(color.InGreen(selectedEnvName))
 	prompt := &survey.Select{
 		Message: "Select server",
-		Options: servers,
+		Options: labels,
 	}
-	survey.AskOne(prompt, &toConnect)
-	fmt.Println(color.InGreen("Trying to connect to " + toConnect))
-	ssh.Connect(toConnect, user, environment)
+	survey.AskOne(prompt, &selectedHostName)
+
+	// Extract environment name from the selected option
+	for _, serverOption := range serverOptions {
+		if serverOption.Label == selectedHostName {
+			selectedEnvName = serverOption.Environment
+			selectedHostName = strings.Split(serverOption.HostName, " (")[0]
+			break
+		}
+	}
+
+	fmt.Println(color.InGreen("Trying to connect to " + selectedHostName))
+	ssh.Connect(selectedHostName, user, selectedEnvName)
 
 }
