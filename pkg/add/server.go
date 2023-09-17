@@ -39,7 +39,7 @@ func init() {
 	serverCmd.Flags().StringVarP(&aGroup, "group", "g", "", "Group name in which this server should be added")
 	serverCmd.Flags().StringVarP(&aUser, "user", "u", "", "User name to connect")
 	serverCmd.Flags().StringVarP(&aEnv, "env", "e", "dev", "Environment to add ")
-	serverCmd.MarkFlagsRequiredTogether("user", "group")
+	serverCmd.MarkFlagsRequiredTogether("user", "group", "env")
 
 }
 
