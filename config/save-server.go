@@ -19,6 +19,9 @@ func SaveServer(hostname, user, group, env string, keyAuth bool) {
 		log.Fatalln(err)
 	}
 
+	groupIndex = -1
+	envIndex = -1
+
 	// Find the group and environment, or create them if they don't exist
 	for idx, grp := range config.Groups {
 		if group == grp.Name {

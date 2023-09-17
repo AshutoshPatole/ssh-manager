@@ -15,18 +15,18 @@ import (
 var filePath string
 
 type Group struct {
-	Name        string        `yaml:"Name"`
-	User        string        `yaml:"User"`
-	Environment []Environment `yaml:"Environment"`
+	Name        string        `yaml:"name"`
+	User        string        `yaml:"user"`
+	Environment []Environment `yaml:"env"`
 }
 
 type Environment struct {
-	Name    string   `yaml:"Name"`
-	Servers []Server `yaml:"Servers"`
+	Name    string   `yaml:"name"`
+	Servers []Server `yaml:"servers"`
 }
 
 type Server struct {
-	HostName string `yaml:"HostName"`
+	HostName string `yaml:"hostname"`
 }
 
 // importCmd represents the import command

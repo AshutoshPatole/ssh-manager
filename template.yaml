@@ -1,0 +1,17 @@
+- name: "oracle"
+  user: "ubuntu"
+  env:
+    - name: "ppd"
+      servers:
+        - hostname: 152.67.166.150
+        - hostname: 144.24.148.107
+
+- name: "rbs"
+  user: "ubuntu"
+  env:
+    - name: "dev"
+      servers:
+        - hostname: 152.67.166.150
+    - name: "prd"
+      servers:
+        - hostname: 144.24.148.107
