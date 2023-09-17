@@ -5,32 +5,19 @@ import (
 	"os"
 	"time"
 
+	cConfig "github.com/AshutoshPatole/ssh-manager/config"
 	"github.com/TwiN/go-color"
 	"golang.org/x/crypto/ssh"
 )
 
-func Connect(server, user string) {
+const PORT = "22"
 
-	home, _ := os.UserHomeDir()
+func InitServer(server, user, password, group, env string) {
 
-	privKey := home + "/.ssh/id_ed25519"
-	privKeyBytes, err := os.ReadFile(privKey)
-
-	if err != nil {
-		fmt.Println(color.InRed("Failed to read private key: " + err.Error()))
-		return
-	}
-
-	signer, err := ssh.ParsePrivateKey(privKeyBytes)
-
-	if err != nil {
-		fmt.Println(color.InRed("Failed to parse private key: " + err.Error()))
-		return
-	}
 	config := &ssh.ClientConfig{
 		User: user,
 		Auth: []ssh.AuthMethod{
-			ssh.PublicKeys(signer),
+			ssh.Password(password),
 		},
 		HostKeyAlgorithms: []string{
 			ssh.KeyAlgoRSA,
@@ -66,7 +53,8 @@ func Connect(server, user string) {
 	session.Stdout = os.Stdout
 	session.Stderr = os.Stderr
 
-	if err := session.Run("hostname -f "); err != nil {
-		fmt.Print("Could not find host")
-	}
+	success := AddPubKeysToServer(session)
+
+	cConfig.SaveServer(server, user, group, env, success)
+
 }

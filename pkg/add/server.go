@@ -45,5 +45,5 @@ func init() {
 
 func addServer(server, user string) {
 	password := ssh.AskPass()
-	ssh.ConnectServer(server, user, password, aGroup, aEnv)
+	ssh.InitServer(server, user, password, aGroup, aEnv)
 }

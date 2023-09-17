@@ -8,6 +8,7 @@ import (
 	"log"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/AshutoshPatole/ssh-manager/ssh"
 	c "github.com/AshutoshPatole/ssh-manager/utils"
 	"github.com/TwiN/go-color"
 	"github.com/spf13/cobra"
@@ -53,12 +54,14 @@ func ListToConnectServers(group string) {
 	}
 
 	var servers []string
+	var user string
 
 	for _, grp := range config.Groups {
 		if grp.Name == group {
+			user = grp.User
 			for _, env := range grp.Environment {
 				for _, server := range env.Servers {
-					servers = append(servers, server.HostName)
+					servers = append(servers, server.IP)
 				}
 			}
 		}
@@ -70,5 +73,6 @@ func ListToConnectServers(group string) {
 	}
 	survey.AskOne(prompt, &toConnect)
 	fmt.Println(color.InGreen("Trying to connect to " + toConnect))
+	ssh.Connect(toConnect, user)
 
 }

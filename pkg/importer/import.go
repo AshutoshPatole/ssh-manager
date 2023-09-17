@@ -72,7 +72,7 @@ func readFile(filepath string) {
 		password := ssh.AskPass()
 		for _, env := range group.Environment {
 			for _, host := range env.Servers {
-				ssh.ConnectServer(host.HostName, group.User, password, group.Name, env.Name)
+				ssh.InitServer(host.HostName, group.User, password, group.Name, env.Name)
 			}
 		}
 	}
