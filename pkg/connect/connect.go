@@ -63,7 +63,7 @@ func ListToConnectServers(group string) {
 			for _, env := range grp.Environment {
 				environment = env.Name
 				for _, server := range env.Servers {
-					servers = append(servers, server.IP)
+					servers = append(servers, server.HostName)
 				}
 			}
 		}
