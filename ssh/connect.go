@@ -8,7 +8,7 @@ import (
 	"github.com/TwiN/go-color"
 )
 
-func Connect(server, user string) {
+func Connect(server, user, environment string) {
 	home, _ := os.UserHomeDir()
 
 	privKey := home + "/.ssh/id_ed25519"
@@ -20,16 +20,24 @@ func Connect(server, user string) {
 		fmt.Println(color.InRed("Failed to read private key: " + err.Error()))
 		return
 	}
-
-	// Set your desired prompt colors using properly escaped ANSI escape codes
-	prompt := "\\[\\033[1;31m\\]\\[\\033[42m\\]\\u@\\h \\[\\033[0;36m\\]\\w\\[\\033[0m\\]\\$"
-	fmt.Println(prompt)
-
+	var promptColor string
+	// set bash prompt colors
+	if environment == "prd" {
+		promptColor = "\\[\\033[1;31m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+	} else if environment == "dev" {
+		promptColor = "\\[\\033[1;32m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+	} else if environment == "uat" {
+		promptColor = "\\[\\033[1;34m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+	} else if environment == "sit" {
+		promptColor = "\\[\\033[1;34m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+	} else if environment == "ppd" {
+		promptColor = "\\[\\033[1;33m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+	}
 	// Construct a single SSH command to set the new PS1 configuration in ~/.bashrc
 	exec.Command(
 		"ssh",
 		user+"@"+server,
-		fmt.Sprintf(`sed -i '/^export PS1=/d' ~/.bashrc && echo 'export PS1="%s"' >> ~/.bashrc`, prompt),
+		fmt.Sprintf(`sed -i '/^export PS1=/d' ~/.bashrc && echo 'export PS1="%s"' >> ~/.bashrc`, promptColor),
 	).Run()
 
 	// Modify the SSH command to set the prompt colors

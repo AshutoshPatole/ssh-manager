@@ -55,11 +55,13 @@ func ListToConnectServers(group string) {
 
 	var servers []string
 	var user string
+	var environment string
 
 	for _, grp := range config.Groups {
 		if grp.Name == group {
 			user = grp.User
 			for _, env := range grp.Environment {
+				environment = env.Name
 				for _, server := range env.Servers {
 					servers = append(servers, server.IP)
 				}
@@ -73,6 +75,6 @@ func ListToConnectServers(group string) {
 	}
 	survey.AskOne(prompt, &toConnect)
 	fmt.Println(color.InGreen("Trying to connect to " + toConnect))
-	ssh.Connect(toConnect, user)
+	ssh.Connect(toConnect, user, environment)
 
 }
