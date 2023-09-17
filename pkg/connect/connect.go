@@ -6,6 +6,7 @@ package connect
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -16,20 +17,28 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cGroup string
+var cEnv string
 
 // connectCmd represents the connect command
 var ConnectCmd = &cobra.Command{
 	Use:   "connect",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Connect to the servers",
+	Long: `
+To connect to the servers use:
+ssm connect group-name
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+You can also specify which environments to list:
+ssm connect group-name -e ppd
+	`,
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) < 1 || len(args) > 1 {
+			fmt.Println(color.InYellow("Usage: ssm connect group-name\nYou can also pass environment using -e (optional)"))
+			os.Exit(1)
+		}
+		return nil
+	},
 	Run: func(cmd *cobra.Command, args []string) {
-		ListToConnectServers(cGroup)
+		ListToConnectServers(args[0], cEnv)
 	},
 }
 
@@ -38,7 +47,7 @@ func init() {
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
-	ConnectCmd.Flags().StringVarP(&cGroup, "group", "g", "", "Specify which group servers should be displayed")
+	ConnectCmd.Flags().StringVarP(&cEnv, "env", "e", "", "Specify which environments servers should be displayed")
 	// and all subcommands, e.g.:
 	// connectCmd.PersistentFlags().String("foo", "", "A help for foo")
 
@@ -53,7 +62,7 @@ type ServerOption struct {
 	HostName    string
 }
 
-func ListToConnectServers(group string) {
+func ListToConnectServers(group, environment string) {
 	var config c.Config
 
 	if err := viper.Unmarshal(&config); err != nil {
@@ -70,13 +79,26 @@ func ListToConnectServers(group string) {
 		if grp.Name == group {
 			user = grp.User
 			for _, env := range grp.Environment {
-				for _, server := range env.Servers {
-					serverOption := ServerOption{
-						Label:       fmt.Sprintf("%s (%s)", server.HostName, env.Name),
-						Environment: env.Name,
-						HostName:    server.HostName,
+				if environment != "" {
+					if environment == env.Name {
+						for _, server := range env.Servers {
+							serverOption := ServerOption{
+								Label:       fmt.Sprintf("%s (%s)", server.HostName, env.Name),
+								Environment: env.Name,
+								HostName:    server.HostName,
+							}
+							serverOptions = append(serverOptions, serverOption)
+						}
 					}
-					serverOptions = append(serverOptions, serverOption)
+				} else {
+					for _, server := range env.Servers {
+						serverOption := ServerOption{
+							Label:       fmt.Sprintf("%s (%s)", server.HostName, env.Name),
+							Environment: env.Name,
+							HostName:    server.HostName,
+						}
+						serverOptions = append(serverOptions, serverOption)
+					}
 				}
 			}
 		}
