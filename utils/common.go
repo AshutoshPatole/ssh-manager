@@ -4,6 +4,7 @@ type Server struct {
 	HostName string `mapstructure:"hostname"`
 	IP       string `mapstructure:"ip"`
 	KeyAuth  bool   `mapstructure:"keyAuth"`
+	Alias    string `mapstructure:"alias"`
 }
 
 type Env struct {

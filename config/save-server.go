@@ -14,7 +14,7 @@ var config c.Config
 var groupIndex int = -1
 var envIndex int = -1
 
-func SaveServer(hostname, user, group, env string, keyAuth bool) {
+func SaveServer(hostname, user, group, env, alias string, keyAuth bool) {
 	if err := viper.Unmarshal(&config); err != nil {
 		log.Fatalln(err)
 	}
@@ -44,6 +44,7 @@ func SaveServer(hostname, user, group, env string, keyAuth bool) {
 		HostName: hostname,
 		IP:       ip,
 		KeyAuth:  keyAuth,
+		Alias:    alias,
 	}
 
 	// If the group doesn't exist, create a new group

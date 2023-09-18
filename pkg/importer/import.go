@@ -27,6 +27,7 @@ type Environment struct {
 
 type Server struct {
 	HostName string `yaml:"hostname"`
+	Alias    string `yaml:"alias"`
 }
 
 // importCmd represents the import command
@@ -82,7 +83,7 @@ func readFile(filepath string) {
 		password := ssh.AskPass()
 		for _, env := range group.Environment {
 			for _, host := range env.Servers {
-				ssh.InitServer(host.HostName, group.User, password, group.Name, env.Name)
+				ssh.InitServer(host.HostName, group.User, password, group.Name, env.Name, host.Alias)
 			}
 		}
 	}
