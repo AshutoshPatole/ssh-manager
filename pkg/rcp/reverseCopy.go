@@ -26,14 +26,9 @@ var cRemote string
 // reverseCopyCmd represents the reverseCopy command
 var ReverseCopyCmd = &cobra.Command{
 	Use:     "reverse-copy",
-	Short:   "download file from remote machine",
+	Short:   "Download file from remote machine",
 	Aliases: []string{"rcp"},
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long:    `Download file from remote machine. Default location for saving is $HOME`,
 	Run: func(cmd *cobra.Command, args []string) {
 		download()
 	},
@@ -71,7 +66,7 @@ func download() {
 		fmt.Println("Error downloading file : ", err.Error())
 		os.Exit(1)
 	} else {
-		fmt.Println(color.InGreen("the file is copied to " + localPath))
+		fmt.Println(color.InGreen("The file is copied to " + localPath))
 	}
 
 }
