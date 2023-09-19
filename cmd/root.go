@@ -11,6 +11,7 @@ import (
 	"github.com/AshutoshPatole/ssh-manager/pkg/connect"
 	"github.com/AshutoshPatole/ssh-manager/pkg/importer"
 	"github.com/AshutoshPatole/ssh-manager/pkg/list"
+	"github.com/AshutoshPatole/ssh-manager/pkg/rcp"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -47,6 +48,7 @@ func init() {
 	rootCmd.AddCommand(list.ListCmd)
 	rootCmd.AddCommand(importer.ImportCmd)
 	rootCmd.AddCommand(connect.ConnectCmd)
+	rootCmd.AddCommand(rcp.ReverseCopyCmd)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ssh-manager.json)")
 
 }
