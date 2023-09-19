@@ -83,7 +83,7 @@ func ListToConnectServers(group, environment string) {
 					if environment == env.Name {
 						for _, server := range env.Servers {
 							serverOption := ServerOption{
-								Label:       fmt.Sprintf("%s (%s)", server.HostName, env.Name),
+								Label:       fmt.Sprintf("%s (%s)", server.Alias, env.Name),
 								Environment: env.Name,
 								HostName:    server.HostName,
 							}
@@ -93,7 +93,7 @@ func ListToConnectServers(group, environment string) {
 				} else {
 					for _, server := range env.Servers {
 						serverOption := ServerOption{
-							Label:       fmt.Sprintf("%s (%s)", server.HostName, env.Name),
+							Label:       fmt.Sprintf("%s (%s)", server.Alias, env.Name),
 							Environment: env.Name,
 							HostName:    server.HostName,
 						}
