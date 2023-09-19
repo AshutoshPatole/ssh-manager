@@ -17,7 +17,7 @@ import (
 // listCmd represents the list command
 var ListCmd = &cobra.Command{
 	Use:   "list",
-	Short: "list groups and servers",
+	Short: "List groups and servers",
 	Long:  ``,
 	// Run: func(cmd *cobra.Command, args []string) {
 	// 	fmt.Println("list called")
@@ -46,7 +46,7 @@ func ListGroups() {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"ID.", "Group Name", "Environments", "Env Name", "Server(s)"})
-	table.SetAutoMergeCellsByColumnIndex([]int{0, 1, 2})
+	table.SetAutoMergeCellsByColumnIndex([]int{3})
 	table.SetRowLine(true)
 	env := 0
 	for idx, group := range config.Groups {
