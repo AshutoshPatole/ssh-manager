@@ -49,6 +49,12 @@ func Connect(server, user, environment string) {
 	platform := runtime.GOOS
 
 	if platform == "windows" {
+
+		/*
+			Reason why I did this is because there is permission issues while accessing ssh stored in
+			C:\Windows\ directory. hence I made a local copy in ssh/bin/ssh.exe folder and embeded it in go build
+			HACK!
+		*/
 		tmpDir, err := os.MkdirTemp("", "embedded_ssh")
 		if err != nil {
 			panic(err)
@@ -81,6 +87,9 @@ func Connect(server, user, environment string) {
 		// Modify the SSH command to set the prompt colors
 		sshCmd = exec.Command(sshExePath, user+"@"+server)
 	} else if platform == "linux" {
+		/*
+			for linux platform it should work just fine!
+		*/
 		exec.Command(
 			"ssh",
 			user+"@"+server,
