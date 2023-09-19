@@ -30,6 +30,7 @@ ssm connect group-name
 You can also specify which environments to list:
 ssm connect group-name -e ppd
 	`,
+	Aliases: []string{"c", "con"},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 || len(args) > 1 {
 			fmt.Println(color.InYellow("Usage: ssm connect group-name\nYou can also pass environment using -e (optional)"))

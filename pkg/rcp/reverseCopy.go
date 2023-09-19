@@ -25,8 +25,9 @@ var cRemote string
 
 // reverseCopyCmd represents the reverseCopy command
 var ReverseCopyCmd = &cobra.Command{
-	Use:   "reverse-copy",
-	Short: "download file from remote machine",
+	Use:     "reverse-copy",
+	Short:   "download file from remote machine",
+	Aliases: []string{"rcp"},
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -55,7 +56,6 @@ func init() {
 
 func download() {
 	user, server := listServers()
-	fmt.Println(user, server)
 	client, err := cs.EstablishConnection(user, server)
 	if err != nil {
 		fmt.Println("Could not connect to server", err.Error())
