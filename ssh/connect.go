@@ -6,8 +6,10 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/TwiN/go-color"
+	"golang.org/x/crypto/ssh"
 
 	_ "embed"
 )
@@ -109,4 +111,39 @@ func Connect(server, user, environment string) {
 	if ssh_err != nil {
 		fmt.Println("Failed to run SSH command:", ssh_err)
 	}
+}
+
+func EstablishConnection(user, server string) (*ssh.Client, error) {
+	home, _ := os.UserHomeDir()
+
+	privKey := home + "/.ssh/id_ed25519"
+
+	privKeyByte, err := os.ReadFile(privKey)
+
+	if err != nil {
+		fmt.Println(color.InRed("Failed to read private key: " + err.Error()))
+	}
+
+	signer, _ := ssh.ParsePrivateKey(privKeyByte)
+
+	// SSH client configuration
+	config := &ssh.ClientConfig{
+		User: user,
+		Auth: []ssh.AuthMethod{
+			ssh.PublicKeys(signer),
+		},
+
+		// TODO: fix insecureignore host callback method
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		// optional tcp connect timeout
+		Timeout: 5 * time.Second,
+	}
+
+	// Connect to the SSH server
+	client, err := ssh.Dial("tcp", server+":22", config)
+	if err != nil {
+		return nil, err
+	}
+
+	return client, nil
 }
