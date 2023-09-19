@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 
 	"github.com/TwiN/go-color"
 
@@ -26,27 +27,6 @@ func Connect(server, user, environment string) {
 		fmt.Println(color.InRed("Failed to read private key: " + err.Error()))
 		return
 	}
-	tmpDir, err := os.MkdirTemp("", "embedded_ssh")
-	if err != nil {
-		panic(err)
-	}
-	defer os.RemoveAll(tmpDir)
-
-	// Write the embedded ssh.exe data to a temporary file
-	sshExePath := filepath.Join(tmpDir, "ssh.exe")
-	err = os.WriteFile(sshExePath, sshExe, 0755)
-	if err != nil {
-		panic(err)
-	}
-
-	// Now you have ssh.exe in a temporary file. You can execute it.
-	cmd := exec.Command(sshExePath, "-V") // Example: Run 'ssh.exe -V'
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
-	if err != nil {
-		panic(err)
-	}
 
 	var promptColor string
 	fmt.Println(promptColor)
@@ -63,22 +43,60 @@ func Connect(server, user, environment string) {
 		promptColor = "\\[\\033[1;33m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
 	}
 
-	// Construct a single SSH command to set the new PS1 configuration in ~/.bashrc
-	exec.Command(
-		sshExePath,
-		user+"@"+server,
-		fmt.Sprintf(`sed -i '/^export PS1=/d' ~/.bashrc && echo 'export PS1="%s"' >> ~/.bashrc`, promptColor),
-	).Run()
+	var sshCmd *exec.Cmd
 
-	// Modify the SSH command to set the prompt colors
-	sshCommand := exec.Command(sshExePath, user+"@"+server)
+	// check which platform
+	platform := runtime.GOOS
+
+	if platform == "windows" {
+		tmpDir, err := os.MkdirTemp("", "embedded_ssh")
+		if err != nil {
+			panic(err)
+		}
+		defer os.RemoveAll(tmpDir)
+
+		// Write the embedded ssh.exe data to a temporary file
+		sshExePath := filepath.Join(tmpDir, "ssh.exe")
+		err = os.WriteFile(sshExePath, sshExe, 0755)
+		if err != nil {
+			panic(err)
+		}
+
+		// Now you have ssh.exe in a temporary file. You can execute it.
+		fmt.Print("SSH version : ")
+		cmd := exec.Command(sshExePath, "-V")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Run()
+		if err != nil {
+			panic(err)
+		}
+		// Construct a single SSH command to set the new PS1 configuration in ~/.bashrc
+		exec.Command(
+			sshExePath,
+			user+"@"+server,
+			fmt.Sprintf(`sed -i '/^export PS1=/d' ~/.bashrc && echo 'export PS1="%s"' >> ~/.bashrc`, promptColor),
+		).Run()
+
+		// Modify the SSH command to set the prompt colors
+		sshCmd = exec.Command(sshExePath, user+"@"+server)
+	} else if platform == "linux" {
+		exec.Command(
+			"ssh",
+			user+"@"+server,
+			fmt.Sprintf(`sed -i '/^export PS1=/d' ~/.bashrc && echo 'export PS1="%s"' >> ~/.bashrc`, promptColor),
+		).Run()
+
+		// Modify the SSH command to set the prompt colors
+		sshCmd = exec.Command("ssh", user+"@"+server)
+	}
 
 	// Set the standard input, output, and error streams to the current process's streams
-	sshCommand.Stdin = os.Stdin
-	sshCommand.Stdout = os.Stdout
-	sshCommand.Stderr = os.Stderr
+	sshCmd.Stdin = os.Stdin
+	sshCmd.Stdout = os.Stdout
+	sshCmd.Stderr = os.Stderr
 
-	ssh_err := sshCommand.Run()
+	ssh_err := sshCmd.Run()
 	if ssh_err != nil {
 		fmt.Println("Failed to run SSH command:", ssh_err)
 	}
