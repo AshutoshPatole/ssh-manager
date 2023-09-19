@@ -46,8 +46,8 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// reverseCopyCmd.PersistentFlags().String("foo", "", "A help for foo")
-	ReverseCopyCmd.Flags().StringVarP(&cRemote, "remote", "r", "", "Location of remote file")
-	ReverseCopyCmd.MarkFlagRequired("remote")
+	ReverseCopyCmd.Flags().StringVarP(&cRemote, "file", "f", "", "Location of remote file")
+	ReverseCopyCmd.MarkFlagRequired("file")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
