@@ -18,7 +18,6 @@ var templateCmd = &cobra.Command{
 	Short: "save yaml template for bulk import of servers",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("template called")
 		saveTemplate()
 	},
 }
@@ -44,11 +43,11 @@ func saveTemplate() {
   env:
     - name: dev|uat|sit|ppd|prd
       servers:
-        - hostname: gvx0lcmdme01d.aholdusa.com
+        - hostname: example1.com
           alias: dev engine
-        - hostname: gvx0lcmdms01d.aholdusa.com
+        - hostname: example2.com
           alias: dev service
-        - hostname: gvx0lcmdme01p.aholdusa.com
+        - hostname: example3.com
           alias: prod engine
 
 - name: groupname2
@@ -56,11 +55,11 @@ func saveTemplate() {
   env:
     - name: dev|uat|sit|ppd|prd
       servers:
-        - hostname: gvx0lcmdme01d.aholdusa.com
+        - hostname: example4.com
           alias: dev engine
-        - hostname: gvx0lcmdms01d.aholdusa.com
+        - hostname: example5.com
           alias: dev service
-        - hostname: gvx0lcmdme01p.aholdusa.com
+        - hostname: example6.com
           alias: prod engine
 `
 	// fmt.Println(content)
