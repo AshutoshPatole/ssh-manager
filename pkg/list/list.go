@@ -46,7 +46,7 @@ func ListGroups() {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"ID.", "Group Name", "Environments", "Env Name", "Server(s)"})
-	table.SetAutoMergeCellsByColumnIndex([]int{3})
+	table.SetAutoMergeCellsByColumnIndex([]int{0, 1, 2})
 	table.SetRowLine(true)
 	env := 0
 	for idx, group := range config.Groups {
