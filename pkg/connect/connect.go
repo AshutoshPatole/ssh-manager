@@ -124,8 +124,13 @@ func ListToConnectServers(group, environment string) {
 			break
 		}
 	}
+	if selectedHostName != "" && user != "" && selectedEnvName != "" {
+		fmt.Println(color.InGreen("Host : " + selectedHostName))
+		fmt.Println(color.InGreen("User : " + user))
+		fmt.Println(color.InGreen("Environment : " + selectedEnvName))
 
-	fmt.Println(color.InGreen("Trying to connect to " + selectedHostName))
-	ssh.Connect(selectedHostName, user, selectedEnvName)
-
+		ssh.Connect(selectedHostName, user, selectedEnvName)
+	} else {
+		fmt.Println(color.InRed("Aborted!!"))
+	}
 }
