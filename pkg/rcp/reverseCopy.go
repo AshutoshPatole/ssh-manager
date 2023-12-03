@@ -56,19 +56,45 @@ func download() {
 		fmt.Println("Could not connect to server", err.Error())
 		os.Exit(1)
 	}
-	home, _ := os.UserHomeDir()
-	// Extract the file name and extension from the remote path
-	fileName := filepath.Base(cRemote)
-	localPath := filepath.Join(home, fileName)
 
-	err = downloadFileSFTP(client, cRemote, localPath)
+	// Use the SFTP client to get a list of files matching the pattern on the remote machine
+	remoteFiles, err := listRemoteFilesSFTP(client, cRemote)
 	if err != nil {
-		fmt.Println("Error downloading file : ", err.Error())
+		fmt.Println("Error listing remote files:", err.Error())
 		os.Exit(1)
-	} else {
-		fmt.Println(color.InGreen("The file is copied to " + localPath))
 	}
 
+	home, _ := os.UserHomeDir()
+	for _, remoteFile := range remoteFiles {
+		// Extract the file name and extension from the remote path
+		fileName := filepath.Base(remoteFile)
+		localPath := filepath.Join(home, fileName)
+		fmt.Println("downloading file ... ", remoteFile)
+
+		err := downloadFileSFTP(client, remoteFile, localPath)
+		if err != nil {
+			fmt.Println("Error downloading file:", err.Error())
+			os.Exit(1)
+		} else {
+			fmt.Println(color.InGreen("The file is copied to " + localPath))
+		}
+	}
+}
+
+func listRemoteFilesSFTP(client *ssh.Client, pattern string) ([]string, error) {
+	sftpClient, err := sftp.NewClient(client)
+	if err != nil {
+		return nil, err
+	}
+	defer sftpClient.Close()
+
+	// Use the SFTP client to glob for files on the remote machine
+	remoteFiles, err := sftpClient.Glob(pattern)
+	if err != nil {
+		return nil, err
+	}
+
+	return remoteFiles, nil
 }
 
 func downloadFileSFTP(client *ssh.Client, remotePath, localPath string) error {
