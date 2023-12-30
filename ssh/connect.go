@@ -30,18 +30,35 @@ func Connect(server, user, environment string) {
 	}
 
 	var promptColor string
-	fmt.Println(promptColor)
+	// fmt.Println(promptColor)
 	// set bash prompt colors
-	if environment == "prd" {
-		promptColor = "\\[\\033[1;31m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
-	} else if environment == "dev" {
-		promptColor = "\\[\\033[1;32m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
-	} else if environment == "uat" {
-		promptColor = "\\[\\033[1;34m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
-	} else if environment == "sit" {
-		promptColor = "\\[\\033[1;34m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
-	} else if environment == "ppd" {
-		promptColor = "\\[\\033[1;33m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+
+	if user == "root" {
+		if environment == "prd" {
+			promptColor = "\\[\\033[1;31m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\# "
+		} else if environment == "dev" {
+			promptColor = "\\[\\033[1;32m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\# "
+		} else if environment == "uat" {
+			promptColor = "\\[\\033[1;34m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\# "
+		} else if environment == "sit" {
+			promptColor = "\\[\\033[1;34m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\# "
+		} else if environment == "ppd" {
+			promptColor = "\\[\\033[1;33m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\# "
+		}
+
+	} else {
+		if environment == "prd" {
+			promptColor = "\\[\\033[1;31m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+		} else if environment == "dev" {
+			promptColor = "\\[\\033[1;32m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+		} else if environment == "uat" {
+			promptColor = "\\[\\033[1;34m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+		} else if environment == "sit" {
+			promptColor = "\\[\\033[1;34m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+		} else if environment == "ppd" {
+			promptColor = "\\[\\033[1;33m\\]\\[\\033m\\]\\u@\\h \\[\\033[1;36m\\]\\w\\[\\033[0m\\]\\$ "
+		}
+
 	}
 
 	var sshCmd *exec.Cmd
